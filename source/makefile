@@ -3,7 +3,7 @@ UNAME=$(shell uname)
 CXX=g++
 CXXFLAGS=-Wall -g -O3
 ifeq ($(UNAME),Darwin)
-IFLAGS=-I /usr/include/malloc
+IFLAGS=-I /usr/include/malloc -I /opt/local/include
 else
 IFLAGS=-I /usr/include
 endif

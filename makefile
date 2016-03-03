@@ -8,7 +8,7 @@ else
 IFLAGS=-I /usr/include
 endif
 #sources and objects
-SOURCES=$(wildcard *.cpp)
+SOURCES=$(wildcard source/*.cpp)
 OBJECTS=$(subst .cpp,.o,$(SOURCES))
 
 all: $(OBJECTS)

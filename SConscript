@@ -9,7 +9,8 @@ import glob
 Import('env')
 
 sources = glob.glob('source/*.cpp')
+txml2_sources = 'tinyxml2/tinyxml2.cpp'
 
-objs = env.Object(sources)
+objs = env.Object(sources+txml2_sources)
 
 Return('objs')

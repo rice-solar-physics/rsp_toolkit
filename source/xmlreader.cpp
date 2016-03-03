@@ -10,7 +10,7 @@
 
 #include "xmlreader.h"
 
-TiXmlElement * check_element(TiXmlElement *result,std::string search_value)
+tinyxml2::XMLElement * check_element(tinyxml2::XMLElement *result,std::string search_value)
 {
 	if(result != NULL)
 	{
@@ -26,11 +26,11 @@ TiXmlElement * check_element(TiXmlElement *result,std::string search_value)
 	}
 }
 
-TiXmlElement * recursive_read(TiXmlElement *parent, std::string search_value)
+tinyxml2::XMLElement * recursive_read(tinyxml2::XMLElement *parent, std::string search_value)
 {	
-	TiXmlElement *child;
+	tinyxml2::XMLElement *child;
 	
-	if(search_value.compare(parent->ValueStr()) == 0)
+	if(search_value.compare(parent->Value()) == 0)
 	{
 		child = parent;
 	}
@@ -39,12 +39,12 @@ TiXmlElement * recursive_read(TiXmlElement *parent, std::string search_value)
 		child = parent->FirstChildElement();
 	}
 	
-	while( child != NULL && search_value.compare(child->ValueStr()) != 0)
+	while( child != NULL && search_value.compare(child->Value()) != 0)
 	{
 		if(child->FirstChildElement() != NULL)
 		{
-			TiXmlElement *grandChild = recursive_read(child,search_value);
-			if(grandChild != NULL && search_value.compare(grandChild->ValueStr()) == 0)
+			tinyxml2::XMLElement *grandChild = recursive_read(child,search_value);
+			if(grandChild != NULL && search_value.compare(grandChild->Value()) == 0)
 			{
 				child = grandChild;
 				break;

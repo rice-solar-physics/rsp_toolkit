@@ -10,7 +10,7 @@
 
 #include <string>
 #include <stdlib.h>
-#include "tinyxml.h"
+#include "../tinyxml2/tinyxml2.h"
 
-TiXmlElement * recursive_read(TiXmlElement *, std::string);
-TiXmlElement * check_element(TiXmlElement *, std::string);
+tinyxml2::XMLElement * recursive_read(tinyxml2::XMLElement *, std::string);
+tinyxml2::XMLElement * check_element(tinyxml2::XMLElement *, std::string);

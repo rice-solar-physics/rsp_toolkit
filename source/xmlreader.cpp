@@ -1,7 +1,7 @@
 // ****
 // *
 // * Routine that uses TinyXML library to parse XML configuration files
-// * 
+// *
 // * Author: Will Barnes
 // *
 // * Date last modified: 16/12/2015
@@ -9,6 +9,14 @@
 // ****
 
 #include "xmlreader.h"
+
+tinyxml2::XMLElement * get_element(tinyxml2::XMLElement *root,std::string search_value)
+{
+	//Search for element in root
+	tinyxml2::XMLElement * result = recursive_read(root,search_value);
+	tinyxml2::XMLElement * checked_result = check_element(result,search_value);
+	return checked_result;
+}
 
 tinyxml2::XMLElement * check_element(tinyxml2::XMLElement *result,std::string search_value)
 {
@@ -27,9 +35,9 @@ tinyxml2::XMLElement * check_element(tinyxml2::XMLElement *result,std::string se
 }
 
 tinyxml2::XMLElement * recursive_read(tinyxml2::XMLElement *parent, std::string search_value)
-{	
+{
 	tinyxml2::XMLElement *child;
-	
+
 	if(search_value.compare(parent->Value()) == 0)
 	{
 		child = parent;
@@ -38,7 +46,7 @@ tinyxml2::XMLElement * recursive_read(tinyxml2::XMLElement *parent, std::string 
 	{
 		child = parent->FirstChildElement();
 	}
-	
+
 	while( child != NULL && search_value.compare(child->Value()) != 0)
 	{
 		if(child->FirstChildElement() != NULL)
@@ -50,9 +58,9 @@ tinyxml2::XMLElement * recursive_read(tinyxml2::XMLElement *parent, std::string 
 				break;
 			}
 		}
-		
+
 		child = child->NextSiblingElement();
 	}
-	
+
 	return child;
 }

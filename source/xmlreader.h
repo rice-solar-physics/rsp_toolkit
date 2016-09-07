@@ -13,5 +13,6 @@
 #include "../tinyxml2/tinyxml2.h"
 
 std::string get_element_text(tinyxml2::XMLElement *, std::string);
+tinyxml2::XMLElement * get_element(tinyxml2::XMLElement *, std::string);
 tinyxml2::XMLElement * recursive_read(tinyxml2::XMLElement *, std::string);
 tinyxml2::XMLElement * check_element(tinyxml2::XMLElement *, std::string);

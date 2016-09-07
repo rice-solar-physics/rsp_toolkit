@@ -10,7 +10,7 @@
 
 #include "xmlreader.h"
 
-const char* get_element_text(tinyxml2::XMLElement *root,std::string search_value)
+std::string get_element_text(tinyxml2::XMLElement *root,std::string search_value)
 {
 	//Search for element in root
 	tinyxml2::XMLElement * result = recursive_read(root,search_value);

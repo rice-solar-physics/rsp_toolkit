@@ -23,11 +23,14 @@ class InputHandler(object):
     InputHandler so that relevant log messages can be recorded.
     """
 
-    def __init__(self,input_filename,input_vars,**kwargs):
+    def __init__(self,input_filename,input_vars=None,**kwargs):
         """Constructor"""
         tree = ET.parse(input_filename)
         self.root = tree.getroot()
-        self.var_list = input_vars
+        if input_vars is not None:
+            self.var_list = input_vars
+        else:
+            self.var_list = [child.tag for child in self.root]
         self.logger = logging.getLogger(type(self).__name__)
 
 
@@ -54,13 +57,13 @@ class InputHandler(object):
         if node.getchildren():
             tmp = []
             for child in node.getchildren():
-                tmp.append(self._read_node(child))
+                tmp.append({child.tag:self._read_node(child)})
             return tmp
         else:
             if node.text:
                 return self._bool_filter(node.text)
             elif node.attrib:
-                return {node.tag : node.attrib}
+                return node.attrib
             else:
                 self.logger.warning('Unrecognized node format for %s. Returning None.'%(node.tag))
                 return None

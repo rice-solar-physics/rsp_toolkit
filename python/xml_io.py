@@ -3,6 +3,7 @@ Routines for reading in and printing out files for results and configuration.
 """
 
 import logging
+from collections import OrderedDict
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as xdm
 
@@ -55,15 +56,21 @@ class InputHandler(object):
         """Read in node values for different configurations"""
 
         if node.getchildren():
-            tmp = []
-            for child in node.getchildren():
-                tmp.append({child.tag:self._read_node(child)})
+            _child_tags = [child.tag for child in node.getchildren()]
+            if len(_child_tags) != len(set(_child_tags)):
+                tmp = []
+                for child in node.getchildren():
+                    tmp.append({child.tag:self._read_node(child)})
+            else:
+                tmp = OrderedDict()
+                for child in node.getchildren():
+                    tmp[child.tag] = self._read_node(child)
             return tmp
         else:
             if node.text:
-                return self._bool_filter(node.text)
+                return self._type_checker(node.text)
             elif node.attrib:
-                return node.attrib
+                return {key:self._type_checker(node.attrib[key]) for key in node.attrib}
             else:
                 self.logger.warning('Unrecognized node format for %s. Returning None.'%(node.tag))
                 return None
@@ -72,18 +79,29 @@ class InputHandler(object):
     def _bool_filter(self,val):
         """Convert true/false string to Python bool"""
 
-        trues = ['True','TRUE','true','yes','Yes',1]
-        falses = ['False','FALSE','false','no','No',0]
+        trues = ['True','TRUE','true','yes','Yes']
+        falses = ['False','FALSE','false','no','No']
 
-        if type(val) is not type(''):
-            return val
-        elif any([val == t for t in trues]):
+        if any([val == t for t in trues]):
             return True
         elif any([val == f for f in falses]):
             return False
         else:
             return val
 
+    def _type_checker(self,val):
+        """Convert to int or float if possible"""
+
+        try:
+            return int(val)
+        except ValueError:
+            pass
+        try:
+            return float(val)
+        except ValueError:
+            pass
+
+        return self._bool_filter(val)
 
 
 class OutputHandler(object):
@@ -137,12 +155,12 @@ class OutputHandler(object):
             for item in node:
                 sub_keyname = [k for k in item][0]
                 self._set_element_recursive(element,item[sub_keyname],sub_keyname)
+        elif type(node).__name__ == 'OrderedDict':
+            for key in node:
+                self._set_element_recursive(element,node[key],key)
         elif type(node) is dict:
             for key in node:
-                if key == '_val':
-                    element.text = str(node[key])
-                else:
-                    element.set(key,str(node[key]))
+                element.set(key,str(node[key]))
         else:
             element.text = str(node)
 
